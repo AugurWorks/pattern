@@ -1,5 +1,5 @@
 export default class DataSetValue {
 
-  private date: Date;
-  private value: number;
+  public date: Date;
+  public value: number;
 }
