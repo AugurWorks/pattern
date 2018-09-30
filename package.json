@@ -22,14 +22,20 @@
   },
   "homepage": "https://github.com/AugurWorks/pattern#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.3",
-    "log4js": "^3.0.5"
+    "log4js": "^3.0.5",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.17.0",
     "@types/express": "^4.16.0",
     "@types/log4js": "^2.3.5",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.9.4",
+    "@types/request": "^2.47.1",
+    "@types/request-promise": "^4.1.42",
     "@types/sinon": "^5.0.2",
     "mocha": "^5.2.0",
     "nyc": "^13.0.1",
