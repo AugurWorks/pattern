@@ -4,6 +4,7 @@ import * as log4js from 'log4js';
 
 import SingleDataRequest from './model/SingleDataRequest';
 
+import { MatchingAlgorithm } from './model/MatchingAlgorithm';
 import dataRetrievalService from './service/DataRetrievalService';
 import matchingService from './service/MatchingService';
 
@@ -59,8 +60,9 @@ app.get('/match', async (req, res) => {
   const unit = req.query.unit;
   const interval = parseInt(req.query.interval, 10);
   const singleDataRequest = new SingleDataRequest(symbol, startDate, endDate, unit);
+  const algorithm: MatchingAlgorithm = MatchingAlgorithm[req.query.algorithm] as any;
   const dataSetValues = await dataRetrievalService.getDataSetValues(singleDataRequest);
-  const matchingResult = matchingService.getDataSetValues(dataSetValues, interval);
+  const matchingResult = matchingService.getDataSetValues(dataSetValues, interval, algorithm);
   res.json(matchingResult);
 });
 
