@@ -32,9 +32,16 @@ export class MatchingService {
         return matching.reduce((sum, value, index) => {
           return sum + Math.pow(value.value - current[index].value, 2);
         }, 0);
+      case MatchingAlgorithm.VOLATILITY:
+        return Math.abs(this.volatility(current) - this.volatility(matching));
       default:
         throw new Error(`Unknown matching algorithm ${algorithm}`);
     }
+  }
+
+  private volatility(dataSetValues: DataSetValue[]): number {
+    const avg = dataSetValues.reduce((sum, dataSetValue) => sum + dataSetValue.value, 0) / dataSetValues.length;
+    return dataSetValues.reduce((sum, dataSetValue) => sum + Math.pow(dataSetValue.value - avg, 2), 0);
   }
 }
 
