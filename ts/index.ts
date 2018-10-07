@@ -58,11 +58,12 @@ app.get('/match', async (req, res) => {
   const startDate = new Date(Date.parse(req.query.startDate));
   const endDate = new Date(Date.parse(req.query.endDate));
   const unit = req.query.unit;
-  const interval = parseInt(req.query.interval, 10);
+  const duration = parseInt(req.query.duration, 10);
+  const offset = parseInt(req.query.offset, 10);
   const singleDataRequest = new SingleDataRequest(symbol, startDate, endDate, unit);
   const algorithm: MatchingAlgorithm = MatchingAlgorithm[req.query.algorithm] as any;
   const dataSetValues = await dataRetrievalService.getDataSetValues(singleDataRequest);
-  const matchingResult = matchingService.getDataSetValues(dataSetValues, interval, algorithm);
+  const matchingResult = matchingService.getDataSetValues(dataSetValues, duration, offset, algorithm);
   res.json(matchingResult);
 });
 

@@ -6,17 +6,18 @@ export class MatchingService {
 
   public getDataSetValues(
     dataSetValues: DataSetValue[],
-    interval: number,
+    duration: number,
+    offset: number,
     algorithm: MatchingAlgorithm): MatchingResult {
-    if (dataSetValues.length <= interval) {
+    if (dataSetValues.length <= duration) {
       throw new Error(`There are not enough values to run pattern matching`);
     }
     const sortedValues = dataSetValues.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    const currentValues = sortedValues.slice(0, interval);
+    const currentValues = sortedValues.slice(0, duration);
     let lowestError = Infinity;
     let bestMatchingValues;
-    for (let offset = 1; offset < dataSetValues.length - interval; offset++) {
-      const matchingValues = sortedValues.slice(offset, interval + offset);
+    for (let durationOffset = offset; durationOffset < dataSetValues.length - duration; durationOffset += offset) {
+      const matchingValues = sortedValues.slice(durationOffset, duration + durationOffset);
       const error = this.getError(currentValues, matchingValues, algorithm);
       if (error < lowestError) {
         lowestError = error;
