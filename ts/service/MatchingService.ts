@@ -16,7 +16,7 @@ export class MatchingService {
     const currentValues = sortedValues.slice(0, duration);
     let lowestError = Infinity;
     let bestMatchingValues;
-    for (let durationOffset = offset; durationOffset < dataSetValues.length - duration; durationOffset += offset) {
+    for (let durationOffset = duration; durationOffset < dataSetValues.length - duration; durationOffset += offset) {
       const matchingValues = sortedValues.slice(durationOffset, duration + durationOffset);
       const error = this.getError(currentValues, matchingValues, algorithm);
       if (error < lowestError) {
@@ -35,14 +35,23 @@ export class MatchingService {
         }, 0);
       case MatchingAlgorithm.VOLATILITY:
         return Math.abs(this.volatility(current) - this.volatility(matching));
+      case MatchingAlgorithm.VOLATILITY_WITH_MIN:
+        return Math.abs(this.volatilityWithMin(current, 0.1) - this.volatilityWithMin(matching, 0.1));
       default:
         throw new Error(`Unknown matching algorithm ${algorithm}`);
     }
   }
 
   private volatility(dataSetValues: DataSetValue[]): number {
+    return this.volatilityWithMin(dataSetValues, 0);
+  }
+
+  private volatilityWithMin(dataSetValues: DataSetValue[], minValue: number): number {
     const avg = dataSetValues.reduce((sum, dataSetValue) => sum + dataSetValue.value, 0) / dataSetValues.length;
-    return dataSetValues.reduce((sum, dataSetValue) => sum + Math.pow(dataSetValue.value - avg, 2), 0);
+    return dataSetValues.reduce((sum, dataSetValue) => {
+      const diff = dataSetValue.value - avg;
+      return sum + Math.pow(Math.abs(diff) <= minValue ? 0 : diff, 2);
+    }, 0);
   }
 }
 
