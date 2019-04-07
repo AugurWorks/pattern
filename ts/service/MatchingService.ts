@@ -15,16 +15,25 @@ export class MatchingService {
     const sortedValues = dataSetValues.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     const currentValues = sortedValues.slice(0, duration);
     let lowestError = Infinity;
-    let bestMatchingValues;
+    const best = {
+      durationOffset: 0,
+      matchingValues: []
+    };
     for (let durationOffset = duration; durationOffset < dataSetValues.length - duration; durationOffset += offset) {
       const matchingValues = sortedValues.slice(durationOffset, duration + durationOffset);
       const error = this.getError(currentValues, matchingValues, algorithm);
       if (error < lowestError) {
         lowestError = error;
-        bestMatchingValues = matchingValues;
+        best.matchingValues = matchingValues;
+        best.durationOffset = durationOffset;
       }
     }
-    return new MatchingResult(MatchingAlgorithm[algorithm], lowestError, currentValues, bestMatchingValues);
+    return new MatchingResult(
+      MatchingAlgorithm[algorithm],
+      lowestError,
+      currentValues,
+      best.matchingValues,
+      best.durationOffset);
   }
 
   private getError(current: DataSetValue[], matching: DataSetValue[], algorithm: MatchingAlgorithm): number {

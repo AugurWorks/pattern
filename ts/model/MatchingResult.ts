@@ -7,6 +7,7 @@ export default class MatchingResult {
     private matchingAlgorithm: string,
     private error: number,
     private currentValues: DataSetValue[],
-    private bestMatch: DataSetValue[]
+    private bestMatch: DataSetValue[],
+    private durationOffset: number
   ) { }
 }
